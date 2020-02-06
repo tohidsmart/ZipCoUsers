@@ -50,7 +50,7 @@
 
 #### How to run the project 
 
-1. In order to run the API and Sql server, run in the root folder `docker-compose build` and after that `docker-compose up` 
+1. In order to run the API and Sql server, run in the `/src` folder `docker-compose build` and after that `docker-compose up` 
 2. When the `docker-compose up ` job is finished, access the backend api using http://localhost:5000 url 
 3. The endpoints are configured to show swagger
 
@@ -59,13 +59,6 @@
 
 ![File](./Images/file.png)
 
-<b> Report screen when it is empty </b>
-
-![File2](./Images/File2.PNG)
-
-<b> Report Result </b>
-
-![File3](./Images/file3.PNG)
 
 <b> Tests result </b>
 
