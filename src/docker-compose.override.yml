@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  usermanaging.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "32033:80"

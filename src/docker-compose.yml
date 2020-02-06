@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  usermanaging.api:
+    image: ${DOCKER_REGISTRY-}usermanagingapi
+    build:
+      context: .
+      dockerfile: Services/UserManaging/UserManaging.API/Dockerfile
+    ports:
+     - 5000:80
+     - 5001:443
+    links:
+      - sqlserver
+  
+  sqlserver:
+    image: microsoft/mssql-server-linux:2017-latest
+    hostname: 'sqlserver'
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: "BigPassw0rd"
+    volumes:
+      - ./data/mssql:/var/opt/mssql3
+    ports:
+      - '1433:1433'
+    expose:
+      - 1433
