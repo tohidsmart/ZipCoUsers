@@ -5,13 +5,13 @@
 1. This solution is implemented using .Net Core version 3.1 and runs as a WebAPI application
 2. The data layer is implemented using .Net core entity framework and Sql Server
 
-3.  The root directory contains README file, src folder and docker compose file
+3.  The root directory contains README file, src folder and images.
 4.  The src folder is a place-holder for a number of services.
-5.  Under the `services` folder, ZipCO `ManagingUser` service with all its dependencies stored
+5.  Under the `services` folder, ZipCO `ManagingUser` service with all its dependencies is stored
 6.  This structure follows the Microservice and service oriented architecture
 7. This structure is open to extension and new isolated services can be added within their `Bounded Context`
 8. Each services eventually is deployed as a container and is isolated from other services
-9. In this context,`UserManaging` service is docker ready. Instruction is followed in the end
+9. In this exercise,`UserManaging` service is docker ready. Instruction is followed in the end
 
 
  #### The `UserManaging`  service is composed of the following projects.
