@@ -16,13 +16,11 @@ namespace UserManaging.API.Controllers
     public class UsersController : ControllerBase
     {
 
-        private readonly ILogger<UsersController> logger;
         private readonly IMediator mediator;
 
-        public UsersController(ILogger<UsersController> logger, IMediator mediator)
+        public UsersController(IMediator mediator)
         {
             this.mediator = mediator;
-            this.logger = logger;
         }
 
 

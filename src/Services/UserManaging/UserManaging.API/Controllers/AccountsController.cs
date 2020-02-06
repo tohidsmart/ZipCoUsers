@@ -16,15 +16,12 @@ namespace UserManaging.API.Controllers
     public class AccountsController : ControllerBase
     {
 
-        private readonly ILogger<UsersController> logger;
         private readonly IMediator mediator;
 
-        public AccountsController(ILogger<UsersController> logger, IMediator mediator)
+        public AccountsController( IMediator mediator)
         {
             this.mediator = mediator;
-            this.logger = logger;
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateAccountCommand command)
