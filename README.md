@@ -57,7 +57,7 @@
 
 <b>Example screen when API Swagger loads</b>
 
-![File](./Images/file.png)
+![File](./Images/APIImage.png)
 
 
 <b> Tests result </b>
