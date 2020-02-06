@@ -1,16 +1,17 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using UserManaging.API;
 using UserManaging.CQRS.Commands.Create;
+using UserManaging.CQRS.Queries;
 using Xunit;
 
 namespace UserManaging.Tests
 {
-
     public class UserTests : IClassFixture<UserManagingApplicationFactory<Startup>>
     {
         private readonly HttpClient client;
@@ -42,7 +43,6 @@ namespace UserManaging.Tests
             Assert.Equal(responseObject.FirstName, createUserCommand.FirstName);
 
         }
-
 
         [Fact]
         public async Task B_CreateUser_UserSalaryZeroExpensesZero_Return400BadRequestStatusCode()
@@ -92,8 +92,8 @@ namespace UserManaging.Tests
                 Email = "UserA@example.com",
                 FirstName = "Second",
                 LastName = "User",
-                Expenses = 100,
-                Salary = 400
+                Expenses = 1000,
+                Salary = 2000
             };
 
             // Act
@@ -114,5 +114,58 @@ namespace UserManaging.Tests
 
         }
 
+        [Fact]
+        public async Task D_CreateUser_WithAccount_GetUser()
+        {
+            //Arrange
+
+            CreateUserCommand createUserCommand = new CreateUserCommand
+            {
+                Email = "test10@example.com",
+                FirstName = "Paul",
+                LastName = "Walker",
+                Expenses = 300,
+                Salary = 1500
+            };
+            CreateAccountCommand createAccountCommand = new CreateAccountCommand
+            {
+                Balance = 1000,
+                Type = "ZipMoney"
+            };
+
+            // Act
+            var userContent = TestHelpers.CreateHttpContent(createUserCommand);
+            var userResponse = await TestHelpers.MakePostRequest(client, "/api/v1/users", userContent);
+            var userResponseObject = await TestHelpers.DeserializeResponse<CreateUserResponse>(userResponse);
+
+            createAccountCommand.UserId = userResponseObject.UserId;
+            var accountContent = TestHelpers.CreateHttpContent(createAccountCommand);
+            var accountResponse = await TestHelpers.MakePostRequest(client, "/api/v1/accounts", accountContent);
+            var accountResponseObject = await TestHelpers.DeserializeResponse<CreateAccountResponse>(accountResponse);
+
+            var getUserContent = await TestHelpers.MakeGetRequest(client, $"/api/v1/users/{userResponseObject.UserId}");
+            var getUserObject = await TestHelpers.DeserializeResponse<QueryUserResponse>(getUserContent);
+
+            //Assert
+            Assert.Equal(HttpStatusCode.Created, userResponse.StatusCode);
+            Assert.Equal(HttpStatusCode.Created, accountResponse.StatusCode);
+
+            Assert.Equal(createAccountCommand.Type, accountResponseObject.Type);
+            Assert.Equal(createAccountCommand.UserId, accountResponseObject.UserId);
+            Assert.Equal(userResponseObject.UserId, getUserObject.UserId);
+            Assert.Equal(accountResponseObject.AccountId, getUserObject.Account.AccountId);
+
+
+        }
+
+        [Fact]
+        public async Task E_ListUsers()
+        {
+            var accountsResponse = await TestHelpers.MakeGetRequest(client, "api/v1/users/list");
+            var accountResponseObject = await TestHelpers.
+                DeserializeResponse<IEnumerable<QueryUserResponse>>(accountsResponse);
+
+            Assert.NotEmpty(accountResponseObject);
+        }
     }
 }

@@ -37,7 +37,12 @@ namespace UserManaging.Tests
         {
             HttpResponseMessage response = await client.PostAsync(route, content);
             return response;
+        }
 
+        public static async Task<HttpResponseMessage> MakeGetRequest(HttpClient client, string route)
+        {
+            HttpResponseMessage response = await client.GetAsync(route);
+            return response;
         }
 
         public static IServiceCollection SetupTestDatabase<TContext>(this IServiceCollection services,SqliteConnection connection) where TContext : DbContext

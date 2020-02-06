@@ -14,7 +14,8 @@ namespace UserManaging.CQRS.Commands.Create
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
         private readonly IUserAccountQueries userAccountQueries;
-        public CreateAccountCommandHandler(IUserRepository userRepository, 
+        private const int ZIPMoneyThreshold = 1000;
+        public CreateAccountCommandHandler(IUserRepository userRepository,
                                             IMapper mapper,
                                             IUserAccountQueries userAccountQueries)
         {
@@ -24,11 +25,15 @@ namespace UserManaging.CQRS.Commands.Create
         }
         public async Task<CreateAccountResponse> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
         {
-            var existingUser=await userAccountQueries.GetUserAsync(request.UserId, cancellationToken);
+            var existingUser = await userAccountQueries.GetUserAsync(request.UserId, cancellationToken);
             if (existingUser == null)
                 throw new NotFoundException(nameof(existingUser), request.UserId.ToString());
-            
-            var accountRequest = mapper.Map<CreateAccountCommand, Account>(request);
+
+            if (existingUser.Salary - existingUser.Expenses < ZIPMoneyThreshold)
+                throw new BadRequestException("Account",
+                    "The difference between salary and expenses should be more than $1000");
+
+                var accountRequest = mapper.Map<CreateAccountCommand, Account>(request);
 
             var accountEntity = userRepository.AddAccount(accountRequest);
 
