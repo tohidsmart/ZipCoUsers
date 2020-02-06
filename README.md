@@ -28,7 +28,7 @@
    configures the AutoMapper profile and implements the custom exception classes. 
  - <b> UserManaging.API</b>
    - This project is the .net core Web API. It resolves the dependencies, 
-   - The `Users` and `Account` controllers are the API gateway for all CRUD operations. The gateway validates the user input using `FluentValidation` nugget package
+   - The `Users` and `Account` controllers are the API gateway for all CRUD operations.
    - Each controller's action accepts a request  and sends it to appropriate request handler 
    - The request handler triggers each request based on the request type and returns the response.
    - This project implements the <i> `Custom error handler`</i> using Asp.net Middleware
